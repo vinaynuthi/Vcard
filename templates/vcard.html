@@ -1,12 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}{{ user['name'] }} - VCard{% endblock %}
 {% block content %}
 <!-- Add viewport meta tag for proper mobile rendering -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <div class="vcard-container">
-
   <!-- Header -->
   <div class="vcard-header">
-    <h2>{{ user['company_name'] or 'Bavya Health Services is a Private Limited (BHSPL)' }}</h2>
+    <h2>{{ user['company'] or 'Bavya Health Services is a Private Limited (BHSPL)' }}</h2>
   </div>
 
   <!-- Logo -->
@@ -15,7 +16,7 @@
   </div>
 
   <!-- Tagline -->
-  <p class="vcard-tagline">{{ user['tagline'] or 'Making health facilities in emergencies' }}</p>
+  <p class="vcard-tagline">{{ user['designation'] or 'Making health facilities in emergencies' }}</p>
 
   <!-- Buttons -->
   <div class="vcard-top-buttons">
@@ -120,9 +121,6 @@
     </div>
   </div>
 </div>
-
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
 /* === Base Styles === */
@@ -615,20 +613,6 @@ body, html {
     font-size: 1rem;
   }
 }
-.dashboard-footer {
-    text-align: center;
-    padding: 15px 0;
-    background: linear-gradient(90deg, #b3124a, #7b2cbf);
-    color: #fff;
-    font-weight: 600;
-    border-top: 1px solid rgba(255,255,255,0.3);
-    border-radius: 0 0 16px 16px;
-    position: flex;       /* stick to bottom */
-    bottom: 0;             /* at the bottom of viewport */
-    left: 0;
-    width: 100%;           /* full width */
-    z-index: 100;          /* above other content */
-}
 </style>
 
 <script>
@@ -675,7 +659,4 @@ function openContactForm() {
   document.getElementById('contactForm').classList.toggle('hidden');
 }
 </script>
- <footer class="dashboard-footer">
-    Powered by <b>BHSPL</b>
-</footer>
 {% endblock %}
