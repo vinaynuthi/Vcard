@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}Share VCard - {{ user['name'] }}{% endblock %}
 {% block content %}
 <div class="share-container">
     <div class="share-header">
@@ -5,10 +7,6 @@
     </div>
 
     <div class="share-form-container">
-        {% if message %}
-        <div class="success-message" style="display:none;">{{ message }}</div>
-        {% endif %}
-
         <form method="POST" action="{{ url_for('share_vcard', user_id=user['id']) }}">
             <div class="form-group">
                 <label for="email">Recipient Email</label>
@@ -27,25 +25,6 @@
         </form>
     </div>
 </div>
-
-{% if message %}
-<!-- SweetAlert popup for success -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    Swal.fire({
-        icon: 'success',
-        title: 'Success!',
-        text: '{{ message }}',
-        confirmButtonColor: '#800080',
-        background: '#fefefe',
-        color: '#333',
-        showClass: { popup: 'animate__animated animate__fadeInDown' },
-        hideClass: { popup: 'animate__animated animate__fadeOutUp' }
-    });
-});
-</script>
-{% endif %}
 
 <style>
 body {
@@ -74,7 +53,7 @@ body {
 }
 
 .share-header h2 {
-    background: linear-gradient(135deg,  #b3124a, #7b2cbf);
+    background: linear-gradient(135deg, #b3124a, #7b2cbf);
     color: white;
     font-size: 1.6rem;
     font-weight: 700;
@@ -97,7 +76,7 @@ body {
     font-weight: 600;
     margin-bottom: 6px;
     font-size: 1rem;
-    background: linear-gradient(135deg,  #b3124a, #7b2cbf);
+    background: linear-gradient(135deg, #b3124a, #7b2cbf);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -132,7 +111,7 @@ body {
 }
 
 .btn-send {
-    background: linear-gradient(135deg,  #b3124a, #7b2cbf);
+    background: linear-gradient(135deg, #b3124a, #7b2cbf);
     color: white;
     padding: 10px 20px;
     border-radius: 8px;
@@ -149,7 +128,7 @@ body {
 }
 
 .btn-back {
-    background: linear-gradient(135deg,  #b3124a, #7b2cbf);
+    background: linear-gradient(135deg, #b3124a, #7b2cbf);
     color: white;
     padding: 10px 20px;
     border-radius: 8px;
@@ -164,22 +143,6 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(0,0,0,0.3);
     background: linear-gradient(135deg, #b3124a, #7b2cbf);
-}
-
-.success-message {
-    background: #28a745;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    text-align: center;
-    font-weight: 600;
-    animation: fadeIn 0.5s ease forwards;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 </style>
 {% endblock %}
