@@ -1,5 +1,5 @@
-{% set disable_main = True %}
 {% extends 'base.html' %}
+{% block title %}Dashboard - VCard Management{% endblock %}
 {% block content %}
 <div class="dashboard-wrapper">
     <!-- Header -->
@@ -33,15 +33,15 @@
             <div class="card-buttons">
                 <a href="{{ url_for('vcard', user_id=user['id']) }}" class="btn-view">View VCard</a>
                 <a href="{{ url_for('download_vcard', user_id=user['id']) }}" class="btn-qr">Download QR</a>
-                
             </div>
         </div>
-        <footer class="dashboard-footer">
-    Powered by <b>BHSPL</b>
-</footer>
         {% endfor %}
     </div>
 </div>
+
+<footer class="dashboard-footer">
+    Powered by <b>BHSPL</b>
+</footer>
 
 <style>
 /* 🌈 Dashboard Background */
@@ -70,6 +70,7 @@ body {
     font-weight: 700;
     color: #fff;
 }
+
 /* Sticky Footer */
 .dashboard-footer {
     text-align: center;
@@ -79,13 +80,12 @@ body {
     font-weight: 600;
     border-top: 1px solid rgba(255,255,255,0.3);
     border-radius: 0 0 16px 16px;
-    position: fixed;       /* stick to bottom */
-    bottom: 0;             /* at the bottom of viewport */
+    position: fixed;
+    bottom: 0;
     left: 0;
-    width: 100%;           /* full width */
-    z-index: 100;          /* above other content */
+    width: 100%;
+    z-index: 100;
 }
-
 
 /* Controls */
 .dashboard-controls {
@@ -144,7 +144,7 @@ body {
 }
 
 .btn-zip:hover {
-    background: linear-gradient(135deg,  #b3124a, #7b2cbf);
+    background: linear-gradient(135deg, #b3124a, #7b2cbf);
 }
 
 /* Users Grid */
@@ -152,6 +152,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
+    margin-bottom: 80px; /* Space for fixed footer */
 }
 
 /* User Card */
@@ -214,11 +215,11 @@ body {
 }
 
 .btn-qr {
-    background: linear-gradient(90deg,  #b3124a, #7b2cbf);
+    background: linear-gradient(90deg, #b3124a, #7b2cbf);
 }
 
 .btn-qr:hover {
-    background: linear-gradient(90deg,  #b3124a, #7b2cbf);
+    background: linear-gradient(90deg, #b3124a, #7b2cbf);
 }
 
 /* Responsive */
