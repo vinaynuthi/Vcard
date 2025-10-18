@@ -1,12 +1,8 @@
-{% set disable_main = True %}
 {% extends 'base.html' %}
+{% block title %}Create User - VCard Management{% endblock %}
 {% block content %}
 <div class="form-container">
     <a href="{{ url_for('dashboard') }}" class="btn-back">← Back to Dashboard</a>
-
-    {% if message %}
-    <div class="success-message" style="display:none;">{{ message }}</div>
-    {% endif %}
 
     <form method="POST" enctype="multipart/form-data" class="user-form" id="createUserForm" onsubmit="return validateForm()">
         <h2>Create New User</h2>
@@ -42,47 +38,28 @@
 
         <div class="form-row">
             <div class="form-col">
-                <label for="role">Role</label>
-                <select id="role" name="role" required>
-                    <option value="" disabled selected>Select Role</option>
-                    <option value="Admin">Admin</option>
-                    <option value="Manager">Manager</option>
-                    <option value="Employee">Employee</option>
-                    <option value="Technician">Technician</option>
+                <label for="designation">Designation</label>
+                <input type="text" id="designation" name="designation" placeholder="e.g. Manager">
+            </div>
+            <div class="form-col">
+                <label for="company">Company</label>
+                <input type="text" id="company" name="company" placeholder="e.g. ABC Corp">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
                 </select>
             </div>
             <div class="form-col">
-                <label for="department">Department</label>
-                <input type="text" id="department" name="department" placeholder="e.g. IT, HR, Finance">
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-col">
-                <label for="join_date">Joining Date</label>
-                <input type="date" id="join_date" name="join_date">
-            </div>
-            <div class="form-col">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="Unique Username" required>
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-col">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter Password" required>
-            </div>
-            <div class="form-col">
-                <label for="confirm_password">Confirm Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter Password" required>
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-col full-width">
                 <label for="photo">Photo</label>
-                <input type="file" id="photo" name="photo">
+                <input type="file" id="photo" name="photo" accept="image/*">
             </div>
         </div>
 
@@ -90,34 +67,15 @@
     </form>
 </div>
 
-{% if message %}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    Swal.fire({
-        icon: 'success',
-        title: 'User Created Successfully!',
-        text: '{{ message }}',
-        confirmButtonColor: '#8B0000',
-        background: '#fefefe',
-        color: '#333',
-        timer: 2000,
-        showConfirmButton: false
-    });
-});
-</script>
-{% endif %}
-
- <footer class="dashboard-footer">
+<footer class="dashboard-footer">
     Powered by <b>BHSPL</b>
 </footer>
+
 <script>
 function validateForm() {
     const name = document.getElementById("name").value.trim();
     const email = document.getElementById("email").value.trim();
     const phone = document.getElementById("phone").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const confirmPassword = document.getElementById("confirm_password").value.trim();
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^[0-9]{10}$/;
@@ -137,20 +95,10 @@ function validateForm() {
         return false;
     }
 
-    if (password.length < 6) {
-        alert("Password must be at least 6 characters long.");
-        return false;
-    }
-
-    if (password !== confirmPassword) {
-        alert("Passwords do not match.");
-        return false;
-    }
-
     return true;
 }
 
-// 🔹 Restrict phone input to digits only and max 10
+// Restrict phone input to digits only and max 10
 document.getElementById("phone").addEventListener("input", function() {
     this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
 });
@@ -164,6 +112,7 @@ document.getElementById("phone").addEventListener("input", function() {
     padding: 35px 30px;
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    margin-bottom: 80px; /* Space for fixed footer */
 }
 
 .btn-back {
@@ -203,7 +152,6 @@ document.getElementById("phone").addEventListener("input", function() {
 .user-form input[type="text"],
 .user-form input[type="email"],
 .user-form input[type="date"],
-.user-form input[type="password"],
 .user-form textarea,
 .user-form select,
 .user-form input[type="file"] {
@@ -260,18 +208,9 @@ textarea {
 }
 
 .user-form button:hover {
-    background: linear-gradient(90deg,  #b3124a, #7b2cbf);
+    background: linear-gradient(90deg, #b3124a, #7b2cbf);
 }
 
-.success-message {
-    padding: 12px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    background: linear-gradient(90deg,  #b3124a, #7b2cbf);
-    color: #fff;
-    text-align: center;
-    font-weight: 600;
-}
 .dashboard-footer {
     text-align: center;
     padding: 15px 0;
@@ -280,11 +219,11 @@ textarea {
     font-weight: 600;
     border-top: 1px solid rgba(255,255,255,0.3);
     border-radius: 0 0 16px 16px;
-    position: fixed;       /* stick to bottom */
-    bottom: 0;             /* at the bottom of viewport */
+    position: fixed;
+    bottom: 0;
     left: 0;
-    width: 100%;           /* full width */
-    z-index: 100;          /* above other content */
+    width: 100%;
+    z-index: 100;
 }
 </style>
 {% endblock %}
