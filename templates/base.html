@@ -2,23 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ title if title else 'VCard App' }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}VCard Management{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* ----- General Styles ----- */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-           background: linear-gradient(90deg, #b3124a, #7b2cbf) !important;
-            /* color: #fff; */
+            background: linear-gradient(90deg, #b3124a, #7b2cbf);
             min-height: 100vh;
             transition: background 0.3s, color 0.3s;
         }
 
         header {
-            
-            background: linear-gradient(90deg,  #b3124a, #7b2cbf);
+            background: linear-gradient(90deg, #b3124a, #7b2cbf);
             color: #ffffff;
             padding: 12px 20px;
             display: flex;
@@ -134,12 +133,12 @@
         }
 
         .btn-create, .btn-view, .btn-qr, .btn-export, form button {
-            background: linear-gradient(90deg,  #b3124a, #7b2cbf);
+            background: linear-gradient(90deg, #b3124a, #7b2cbf);
             color: #fff;
             box-shadow: 0 3px 8px rgba(0,0,0,0.2);
         }
         .btn-create:hover, .btn-view:hover, .btn-qr:hover, .btn-export:hover, form button:hover {
-            background: linear-gradient(90deg,  #b3124a, #7b2cbf);
+            background: linear-gradient(90deg, #b3124a, #7b2cbf);
             transform: translateY(-2px);
             box-shadow: 0 6px 18px rgba(0,0,0,0.35);
         }
@@ -232,44 +231,43 @@
 <body>
     <!-- Header -->
     {% if not hide_header %}
-<header>
-    <div class="header-left">
-        <img src="{{ url_for('static', filename='images/company_logo.jpg') }}" alt="Company Logo">
-        <span>VCard Management</span>
-    </div>
+    <header>
+        <div class="header-left">
+            <img src="{{ url_for('static', filename='images/company_logo.jpg') }}" alt="Company Logo">
+            <span>VCard Management</span>
+        </div>
 
-    {% if session.get('admin') %}
-    <nav>
-        <a href="{{ url_for('dashboard') }}">Home</a>
-        <a href="{{ url_for('create_user') }}">Create User</a>
-        <button onclick="toggleTheme()">Toggle Theme</button>
-    </nav>
+        {% if session.get('admin') %}
+        <nav>
+            <a href="{{ url_for('dashboard') }}">Home</a>
+            <a href="{{ url_for('create_user') }}">Create User</a>
+            <button onclick="toggleTheme()">Toggle Theme</button>
+        </nav>
 
-    <div class="header-right">
-        <a href="{{ url_for('logout') }}">Logout</a>
-    </div>
-    {% endif %}
-</header>
-{% endif %}
-
-   {% if not disable_main %}
-<main>
-{% endif %}
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="flash {{ category }}">{{ message }}</div>
-            {% endfor %}
+        <div class="header-right">
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
         {% endif %}
-    {% endwith %}
+    </header>
+    {% endif %}
 
-    {% block content %}{% endblock %}
+    {% if not disable_main %}
+    <main>
+    {% endif %}
 
-{% if not disable_main %}
-</main>
-{% endif %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
+        {% block content %}{% endblock %}
+
+    {% if not disable_main %}
+    </main>
+    {% endif %}
 
     <!-- QR Popup -->
     <div id="qrPopup" class="qr-popup">
@@ -279,5 +277,24 @@
 
     <!-- Toast -->
     <div id="toast" class="toast">Link copied to clipboard!</div>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+        }
+
+        function closeQR() {
+            document.getElementById('qrPopup').style.display = 'none';
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
