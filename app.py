@@ -13,8 +13,15 @@ from email.message import EmailMessage
 app = Flask(__name__)
 app.config.from_object(Config)
 
+# Ensure static files are properly configured
+app.static_folder = 'static'
+app.static_url_path = '/static'
+
 # ----------------- Database Initialization -----------------
 def init_db():
+    # Ensure the database directory exists
+    os.makedirs(os.path.dirname(os.path.abspath('vcard.db')), exist_ok=True)
+    
     conn = sqlite3.connect('vcard.db')
     cursor = conn.cursor()
     
@@ -26,22 +33,13 @@ def init_db():
         email TEXT NOT NULL UNIQUE,
         phone TEXT NOT NULL,
         address TEXT NOT NULL,
-        photo TEXT
+        photo TEXT,
+        designation TEXT,
+        company TEXT,
+        gender TEXT,
+        qrcode TEXT
     )
     ''')
-    
-    cursor.execute("PRAGMA table_info(users)")
-    columns = [col[1] for col in cursor.fetchall()]
-
-    new_fields = {
-        "designation": "TEXT",
-        "company": "TEXT",
-        "gender": "TEXT",
-        "qrcode": "TEXT"
-    }
-    for field, datatype in new_fields.items():
-        if field not in columns:
-            cursor.execute(f"ALTER TABLE users ADD COLUMN {field} {datatype}")
     
     conn.commit()
     conn.close()
@@ -61,6 +59,10 @@ def get_db():
 @app.route('/')
 def home():
     return redirect(url_for('login'))
+
+@app.route('/test')
+def test():
+    return "App is running successfully!"
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -147,7 +149,8 @@ def create_user():
         conn.commit()
         conn.close()
 
-        return redirect(url_for('dashboard',message="User created successfully!"))
+        flash("User created successfully!", 'success')
+        return redirect(url_for('dashboard'))
 
     return render_template('create_user.html', logo='static/logo.png')
 
@@ -175,7 +178,7 @@ ADR:{user['address']}
 NOTE:Gender - {user['gender'] or ''}
 END:VCARD
 """
-    filepath = os.path.join('static/uploads', f"{user['name']}.vcf")
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"{user['name']}.vcf")
     with open(filepath, 'w') as f:
         f.write(vcard_data)
 
@@ -217,7 +220,7 @@ def download_all_vcards():
     users = conn.execute("SELECT * FROM users").fetchall()
     conn.close()
 
-    zip_path = "static/uploads/all_vcards.zip"
+    zip_path = os.path.join(app.config['UPLOAD_FOLDER'], "all_vcards.zip")
     with zipfile.ZipFile(zip_path, 'w') as zipf:
         for user in users:
             vcard_data = f"""BEGIN:VCARD
@@ -231,7 +234,7 @@ ADR:{user['address']}
 NOTE:Gender - {user['gender'] or ''}
 END:VCARD"""
             vcard_filename = f"{user['name']}.vcf"
-            temp_path = os.path.join('static/uploads', vcard_filename)
+            temp_path = os.path.join(app.config['UPLOAD_FOLDER'], vcard_filename)
             with open(temp_path, 'w') as f:
                 f.write(vcard_data)
             zipf.write(temp_path, arcname=vcard_filename)
@@ -284,4 +287,5 @@ END:VCARD
 # ----------------- End -----------------
 if __name__ == '__main__':
     app.secret_key = app.config['SECRET_KEY']
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
